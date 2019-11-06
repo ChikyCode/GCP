@@ -1,0 +1,21 @@
+p1.py
+-----------------------------------------------------------------
+
+from pyspark.sql import SparkSession
+spark = SparkSession.\
+            builder.\
+            appName("Demo").\
+            master("local").\
+            getOrCreate()
+
+A = spark.read.csv("gs://sample_datasets/airlines.csv",header = True)
+B = A.filter("fatal_accidents_85_99 == 1" and "incidents_85_99 == 1")
+B.show()
+
+-----------------------------------------------------------------
+	gcloud dataproc jobs submit pyspark \
+	--cluster cluster-00001 --region asia-east1 \
+	gs://sample_datasets/p1.py
+
+>> gcloud dataproc jobs submit pyspark --cluster cluster-00001 --region asia-east1 gs://sample_datasets/p1.py
+

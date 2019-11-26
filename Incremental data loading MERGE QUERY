@@ -1,6 +1,10 @@
 SELECT * FROM fcdatalake.test_supriya.a1
 SELECT * FROM fcdatalake.test_supriya.a2
 
+
+-----------------------------------------
+sample merging
+-----------------------------------------
 MERGE transactions.data
 USING SortedTransactions staging
 ON
@@ -12,6 +16,10 @@ WHEN MATCHED THEN
 WHEN NOT MATCHED BY TARGET THEN
   INSERT (id,latest,history)
   VALUES (staging.id,staging.latest,staging.history)
+
+
+-----------------------------------------
+
 
 MERGE test_supriya.a1 A 
 USING test_supriya.a2 B

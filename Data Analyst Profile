@@ -1,0 +1,39 @@
+Roles of Data Analyst
+------------------------
+1.Collect Data(How to collect data)
+2.Analyse Data(validated to check whether it meets the business requirements)
+3.Create Reports(the model is implemented and then reports thus generated are passed onto the stakeholder)
+
+Data Cleansing or Wrangling or Data Cleaning
+-------------------------------------
+remove record entirely
+replace it with mean or median 
+leave the record as it is 
+introduce dummy variable for empty spaces
+fill it by exploring corrrelations & similarities
+
+
+Important steps in the data validation process
+--------------------------------------
+1. Data Screening: Different kinds of algorithms are used in this step to screen the entire data to find out any inaccurate values.
+
+2. Data Verification: Each and every suspected value is evaluated on various use-cases, and then a final decision is taken on whether the value has to be included in the data or not.
+
+
+How to say that a whether a developed data model is good or not?
+------------------------------------------
+easily adapt to changes according to business requirements.
+If the data gets changed, the model should be able to scale according to the data
+The model developed should also be able to easily consumed by the clients for actionable and profitable results.
+developed model should have predictable performance.
+
+
+few problems that data analyst usually encounter while performing the analysis?
+--------------------------------------------
+Presence of Duplicate entries and spelling mistakes, reduce data quality
+If you are extracting data from a poor source, then this could be a problem as you would have to spend a lot of time cleaning the data.
+f there is incomplete data, then that could be a problem to perform analysis of data.
+
+What is the KNN imputation method?
+
+

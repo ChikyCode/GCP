@@ -1,0 +1,38 @@
+gcloud beta dataflow jobs run JOBRTVMASTERincr \
+--gcs-location gs://fcdatalake-templates/JdbcToBigQueryWithNoPublicIps  \
+--region=asia-east1 \
+--network=datalake-vpc \
+--subnetwork=regions/asia-east1/subnetworks/asia-east1 \
+--parameters \
+driverJars=gs://driver_fc/mssql-jdbc-7.4.1.jre8.jar,\
+driverClassName=com.microsoft.sqlserver.jdbc.SQLServerDriver,\
+connectionURL=jdbc:sqlserver://13.127.131.213:1433,\
+query="select * from FCDBLog.dbo.View_PurchaseDb_RTVMaster where createddate>=GETDATE()-2",\
+outputTable=fcdatalake:PURCHASEDB_STG.rtvmaster_stg_update,\
+bigQueryLoadingTemporaryDirectory=gs://fcdatalake/temp,\
+username='hadoopuser',\
+password='$H@d00p$'
+
+----------------------------------------------------------------------------------
+
+MERGE PURCHASEDB_STG.rtvmaster_stg A
+USING PURCHASEDB_STG.rtvmaster_stg_update B
+ON
+A.rtvid = B.rtvid
+WHEN MATCHED THEN
+UPDATE SET
+warehouseid=B.warehouseid,vendorcode=B.vendorcode,cstvat=B.cstvat,cstpercentage=B.cstpercentage,totalitems=B.totalitems,totalquantity=B.totalquantity,
+netamount=B.netamount,vendordebitamount=B.vendordebitamount,returnaddress=B.returnaddress,shippingpaymentterms=B.shippingpaymentterms,
+dispatchmode=B.dispatchmode,estimateddispatchdate=B.estimateddispatchdate,actualdispatchdate=B.actualdispatchdate,status=B.status,
+comments=B.status,createddate=B.createddate,createdby=B.createdby,lastmodifieddate=B.lastmodifieddate,lastmodifiedby=B.lastmodifiedby,
+isdispose=B.isdispose,companyid=B.companyid,octraitobepaid=B.octraitobepaid,rtvreverselogisticcostby=B.rtvreverselogisticcostby,
+contactpersonname=B.contactpersonname,contactno=B.contactno,referenceno=B.referenceno,PartitionMonth=B.PartitionMonth
+WHEN NOT MATCHED BY TARGET THEN
+INSERT (rtvid,warehouseid,vendorcode,cstvat,cstpercentage,totalitems,totalquantity,netamount,
+vendordebitamount,returnaddress,shippingpaymentterms,dispatchmode,estimateddispatchdate,actualdispatchdate,status,comments,
+createddate,createdby,lastmodifieddate,lastmodifiedby,isdispose,companyid,octraitobepaid,rtvreverselogisticcostby,contactpersonname,
+contactno,referenceno,PartitionMonth)
+VALUES (B.rtvid,B.warehouseid,B.vendorcode,B.cstvat,B.cstpercentage,B.totalitems,B.totalquantity,B.netamount,
+B.vendordebitamount,B.returnaddress,B.shippingpaymentterms,B.dispatchmode,B.estimateddispatchdate,B.actualdispatchdate,B.status,B.comments,
+B.createddate,B.createdby,B.lastmodifieddate,B.lastmodifiedby,B.isdispose,B.companyid,B.octraitobepaid,B.rtvreverselogisticcostby,B.contactpersonname,
+B.contactno,B.referenceno,B.PartitionMonth)

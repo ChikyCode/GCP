@@ -1,2 +1,0 @@
-# GCP
-google cloud learning 

@@ -1,0 +1,46 @@
+sudo service cron status
+Create table Test.impnew( productid String, ListingCount String, PDPCount String, CreatedDate String)
+
+--load_bq.sh
+-------------------------------------------------------
+#!/bin/bash
+bq load Test.impnew gs://test_shabi/C1.csv productid,ListingCount,PDPCount,CreatedDate
+-------------------------------------------------------
+
+--drop_csv.sh
+-------------------------------------------------------
+#!/bin/bash
+gsutil del gs://test_shabi/C1.csv
+-------------------------------------------------------
+
+--crontab -e
+------------------------------------------------------
+* * * * * /bin/sh  /home/shabi_victor/cron/load_bq.sh
+* * * * * /bin/sh  /home/shabi_victor/cron/drop_csv.sh
+
+
+--Change time zone
+-------------------------------------------------------
+cd /usr/share/zoneinfo
+tzselect
+<select zone,country,etc>
+TZ='ASIA/Kolkata'; export TZ
+restart cron services  : sudo /etc/init.d/cron restart
+-------------------------------------------------------
+
+
+
+
+Generating log file
+------------------------------------------------------
+#!/bin/bash
+bq load Test.impnew gs://test_shabi/C1.csv productid,ListingCount,PDPCount,CreatedDate
+
+if [ $? -eq 0 ]
+then
+        echo 'success' >>/home/shabi_victor/log
+else
+        echo 'failed'  >>
+fi
+------------------------------------------------------
+bq load Test.impnew gs://test_shabi/C1.csv productid,ListingCount,PDPCount,CreatedDate > /home/shabi_victor/log/`date +\%Y\%m\%d\%H\%M\%S`-load_bq.log 2>&1

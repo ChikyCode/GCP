@@ -1,0 +1,55 @@
+Monitoring cron
+-------------------------------------------------------
+crontab -l
+crontab -e
+crontab -d
+sudo service cron status
+restart cron services  : sudo /etc/init.d/cron restart
+-------------------------------------------------------
+
+Create table Test.impnew( productid String, ListingCount String, PDPCount String, CreatedDate String)
+
+--load_bq.sh
+-------------------------------------------------------
+#!/bin/bash
+bq load Test.impnew gs://test_shabi/C1.csv
+-------------------------------------------------------
+
+--drop_csv.sh
+-------------------------------------------------------
+#!/bin/bash
+gsutil del gs://test_shabi/C1.csv
+-------------------------------------------------------
+
+--crontab -e <MHDMD>
+------------------------------------------------------
+* * * * * /bin/sh  /home/shabi_victor/cron/load_bq.sh
+* * * * * /bin/sh  /home/shabi_victor/cron/drop_csv.sh
+
+
+--Change time zone
+-------------------------------------------------------
+cd /usr/share/zoneinfo
+tzselect
+<select zone,country,etc>
+TZ='ASIA/Kolkata'; export TZ
+restart cron services  : sudo /etc/init.d/cron restart
+-------------------------------------------------------
+
+Generating log file <Without log file>
+------------------------------------------------------
+#!/bin/bash
+bq load Test.impnew gs://test_shabi/C1.csv
+
+if [ $? -eq 0 ]
+then
+        echo 'success' >>/home/shabi_victor/log
+else
+        echo 'failed'  >>/home/shabi_victor/log
+fi
+------------------------------------------------------
+
+Generating log file <With log file>
+------------------------------------------------------
+10 05 * * * /bin/sh  /home/shabi_victor/cron/load_Impression_Data.sh > /home/shabi_victor/log/`date +\%Y\%m\%d\%H\%M\%S`-Load_FCADATALAKE_UAE_SORTING_SYSTEM_Impression_Data.log 2>&1
+11 05 * * * /bin/sh  /home/shabi_victor/cron/drop_Impression_Data.sh > /home/shabi_victor/log/`date +\%Y\%m\%d\%H\%M\%S`-Drop_FCADATALAKE_UAE_SORTING_SYSTEM_Impression_Data.log 2>&1

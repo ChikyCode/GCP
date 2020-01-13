@@ -1,19 +1,5 @@
-gcloud beta dataflow jobs run JOBRTVMASTERincr \
---gcs-location gs://fcdatalake-templates/JdbcToBigQueryWithNoPublicIps  \
---region=asia-east1 \
---network=datalake-vpc \
---subnetwork=regions/asia-east1/subnetworks/asia-east1 \
---parameters \
-driverJars=gs://driver_fc/mssql-jdbc-7.4.1.jre8.jar,\
-driverClassName=com.microsoft.sqlserver.jdbc.SQLServerDriver,\
-connectionURL=jdbc:sqlserver://13.127.131.213:1433,\
-query="select * from FCDBLog.dbo.View_PurchaseDb_RTVMaster where createddate>=GETDATE()-2",\
-outputTable=fcdatalake:PURCHASEDB_STG.rtvmaster_stg_update,\
-bigQueryLoadingTemporaryDirectory=gs://fcdatalake/temp,\
-username='hadoopuser',\
-password='$H@d00p$'
-
-----------------------------------------------------------------------------------
+Pushing rtvmaster_stg_update data to rtvmaster_stg <INSERT & UPDATE>
+---------------------------------------------------------------------------------------
 
 MERGE PURCHASEDB_STG.rtvmaster_stg A
 USING PURCHASEDB_STG.rtvmaster_stg_update B

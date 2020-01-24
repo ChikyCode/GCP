@@ -1,0 +1,54 @@
+# cd cronjob
+# cd log/load_ImpressionData
+# cd log/load_ImpressionData
+# Just Change some file name 
+
+
+-------------------------------------------------------------------------------------------------
+First Approach
+-------------------------------------------------------------------------------------------------
+
+--load_ImpressionData.sh
+#!/bin/bash
+bq load Test.ImpressionData gs://uae_impression_data_stg/CatALLMobileAppImpressionsFINAL2020-01-18.csv
+
+--drop_ImpressionData.sh
+#!/bin/bash
+gsutil del gs://uae_impression_data_stg/CatALLMobileAppImpressionsFINAL2020-01-18.csv
+
+
+21 07 * * * /bin/sh  /home/shabi_victor/cronjob/load_ImpressionData.sh > /home/shabi_victor/log/load_ImpressionData/`date +\%Y\%m\%d\%H\%M\%S`-Load_FCDATALAKE_UAE_SORTING_SYSTEM_Impression_Data.log 2>&1
+
+22 07 * * * /bin/sh  /home/shabi_victor/cronjob/drop_ImpressionData.sh > /home/shabi_victor/log/drop_ImpressionData/`date +\%Y\%m\%d\%H\%M\%S`-Drop_FCDATALAKE_UAE_SORTING_SYSTEM_Impression_Data.log 2>&1
+
+-------------------------------------------------------------------------------------------------
+Second Approach
+-------------------------------------------------------------------------------------------------
+
+#!/bin/bash
+bq load Test.ImpressionData gs://uae_impression_data_stg/CatALLMobileAppImpressionsFINAL2020-01-18.csv
+
+if [ $? -eq 0 ];
+then
+        echo 'load success' >>/home/shabi_victor/log/load_ImpressionData/l1.log
+	gsutil del gs://uae_impression_data_stg/CatALLMobileAppImpressionsFINAL2020-01-18.csv
+	echo 'drop success' >>/home/shabi_victor/log/drop_ImpressionData/l2.log
+else
+        echo 'load & drop job failed' >>/home/shabi_victor/log/failed_Jobs/l3.log
+fi
+
+-------------------------------------------------------------------------------------------------
+Third Approach
+-------------------------------------------------------------------------------------------------
+#!/bin/bash
+bq load Test.ImpressionData gs://uae_impression_data_stg/CatALLMobileAppImpressionsFINAL2020-01-18.csv > /home/shabi_victor/log/load_ImpressionData/`date +\%Y\%m\%d\%H\%M\%S`-Load_FCDATALAKE_UAE_SORTING_SYSTEM_Impression_Data.log 2>&1
+
+if [ $? -eq 0 ];
+then
+	gsutil del gs://uae_impression_data_stg/CatALLMobileAppImpressionsFINAL2020-01-18.csv > /home/shabi_victor/log/drop_ImpressionData/`date +\%Y\%m\%d\%H\%M\%S`-Drop_FCDATALAKE_UAE_SORTING_SYSTEM_Impression_Data.log 2>&1
+	
+else
+        echo 'load & drop job failed' >>/home/shabi_victor/log/failed_Jobs/`date +\%Y\%m\%d\%H\%M\%S`-Failed_FCDATALAKE_UAE_SORTING_SYSTEM_Impression_Data.log 2>&1
+
+fi
+

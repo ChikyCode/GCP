@@ -1,0 +1,8 @@
+select date_sub(current_date, INTERVAL 3 DAY) as newdate
+
+insert into UAE_SORTING_SYSTEM.ImpressionData
+select * from UAE_SORTING_SYSTEM_STAGE.ImpressionData where CreatedDate = (select cast(date_sub(current_date, INTERVAL 4 DAY) AS DATE))
+and 
+not exists 
+(select 1 from UAE_SORTING_SYSTEM.ImpressionData where CreatedDate = (select cast(date_sub(current_date, INTERVAL 4 DAY) AS DATE)))
+

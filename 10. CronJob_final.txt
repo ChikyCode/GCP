@@ -20,7 +20,7 @@ fi
 MergeImpressionData.sh
 ----------------------------------------------------
 #!/bin/bash
-bq query --use_legacy_sql=false " insert into UAE_SORTING_SYSTEM.ImpressionData select * from UAE_SORTING_SYSTEM_STAGE.ImpressionData where CreatedDate=(select cast(date_sub(current_date, INTERVAL 4 DAY) AS DATE)) and not exists (select 1 from UAE_SORTING_SYSTEM.ImpressionData where CreatedDate = (select cast(date_sub(current_date, INTERVAL 4 DAY) AS DATE)))" && bq query --use_legacy_sql=false "Insert into LOG_DB.Global_Log values ('ImpressionData','UAE_SORTING_SYSTEM',(Select Count(*) FROM UAE_SORTING_SYSTEM.ImpressionData),current_datetime(),'Merge ImpressionData')"
+bq query --use_legacy_sql=false " insert into UAE_SORTING_SYSTEM.ImpressionData select * from UAE_SORTING_SYSTEM_STAGE.ImpressionData where CreatedDate=(select cast(date_sub(current_date, INTERVAL 3 DAY) AS DATE)) and not exists (select 1 from UAE_SORTING_SYSTEM.ImpressionData where CreatedDate = (select cast(date_sub(current_date, INTERVAL 3 DAY) AS DATE)))" && bq query --use_legacy_sql=false "Insert into LOG_DB.Global_Log values ('ImpressionData','UAE_SORTING_SYSTEM',(Select Count(*) FROM UAE_SORTING_SYSTEM.ImpressionData),current_datetime(),'Merge ImpressionData')"
 
 
 StageToLiveDataSync.sh

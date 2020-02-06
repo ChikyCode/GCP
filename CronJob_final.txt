@@ -1,0 +1,29 @@
+Cron Jobs
+----------------------------------------------------
+30 15 * * * /bin/sh   /home/shabi_victor/cronjob/ImpressionDataJob.sh
+30 17 * * * /bin/sh   /home/shabi_victor/UAE_Schedulers/StageToLiveDataSync.sh
+45 15 * * * /bin/sh   /home/shabi_victor/cronjob/MergeImpressionData.sh
+
+
+ImpressionDataJob.sh
+----------------------------------------------------
+#!/bin/bash
+bq query --use_legacy_sql=False "Insert into LOG_DB.Global_Log values ('ImpressionData','UAE_SORTING_SYSTEM_STAGE',(Select Count(*) FROM UAE_SORTING_SYSTEM_STAGE.ImpressionData),current_datetime(),'Before load ImpressionData')" && bq load UAE_SORTING_SYSTEM_STAGE.ImpressionData gs://uae_impression_data_stg/Cat_Impression_Data.csv && bq query --use_legacy_sql=False "Insert into LOG_DB.Global_Log values ('ImpressionData','UAE_SORTING_SYSTEM_STAGE',(Select Count(*) FROM UAE_SORTING_SYSTEM_STAGE.ImpressionData),current_datetime(),'After load ImpressionData')"
+
+if [ $? -eq 0 ];
+then
+   gsutil del gs://uae_impression_data_stg/Cat_Impression_Data.csv && bq query --use_legacy_sql=False "Insert into LOG_DB.Global_Log values ('ImpressionData','UAE_SORTING_SYSTEM_STAGE',0,current_datetime(),'Dropped uae_impression_data_stg.Cat_Impression_Data')"
+else
+   bq query --use_legacy_sql=False "Insert into LOG_DB.Global_Log values ('ImpressionData','UAE_SORTING_SYSTEM_STAGE',0,current_datetime(),'Load & Drop Job Failed')"
+fi
+
+MergeImpressionData.sh
+----------------------------------------------------
+#!/bin/bash
+bq query --use_legacy_sql=false " insert into UAE_SORTING_SYSTEM.ImpressionData select * from UAE_SORTING_SYSTEM_STAGE.ImpressionData where CreatedDate=(select cast(date_sub(current_date, INTERVAL 4 DAY) AS DATE)) and not exists (select 1 from UAE_SORTING_SYSTEM.ImpressionData where CreatedDate = (select cast(date_sub(current_date, INTERVAL 4 DAY) AS DATE)))" && bq query --use_legacy_sql=false "Insert into LOG_DB.Global_Log values ('ImpressionData','UAE_SORTING_SYSTEM',(Select Count(*) FROM UAE_SORTING_SYSTEM.ImpressionData),current_datetime(),'Merge ImpressionData')"
+
+
+StageToLiveDataSync.sh
+----------------------------------------------------
+#!/bin/bash
+bq query --use_legacy_sql=false  'CAll fcdatalake.UAE_SORTING_SYSTEM.StageToLiveDataSync()'

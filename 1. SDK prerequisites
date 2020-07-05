@@ -1,6 +1,6 @@
-gcloud SDK pre-requisites 
+GCLOUD SDK pre-requisites in local systems
 ----------------------------------------------------------------
 
-1. gcloud SDK
-2. java-8
-3. maven 3
+1. GCLOUD SDK
+2. Java-8
+3. Maven 3

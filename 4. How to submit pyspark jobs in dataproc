@@ -1,3 +1,5 @@
+#Subbmission of pyspark jobs in the cluster
+
 p1.py
 -----------------------------------------------------------------
 
@@ -18,4 +20,3 @@ gcloud dataproc jobs submit pyspark \
 gs://sample_datasets/p1.py
 
 >> gcloud dataproc jobs submit pyspark --cluster cluster-00001 --region asia-east1 gs://sample_datasets/p1.py
-

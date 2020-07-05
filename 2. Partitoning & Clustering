@@ -1,11 +1,13 @@
-CREATE table test.dropshipment(id int64,paymentbatchid string, invoiceno string, 
+Partitioning
+-----------------
+CREATE table test.dropshipment(id int64,paymentbatchid string, invoiceno string,
 vendorcode string,invoicequantity int64,cstvattype string,cstvat float64,
 netamount float64,taxamount float64,invoiceamount float64,invoicedate date,createdby string)
+PARTITION by cstvat
 
-
+Partitioning & Clustering:
+-------------------
 CREATE TABLE test.p1
 PARTITION BY invoicedate
 CLUSTER BY id
 AS SELECT * from test.dropshipment
-
-

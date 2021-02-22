@@ -8,7 +8,26 @@ ls
 
 3. To list all table of any particular datasets in BigQuery Shell
 -------------------------------------------
+ls datasetName1. To get into BigQuery Shell
+-------------------------------------------
+bq Shell
+
+2. To list all datasets in BigQuery Shell
+-------------------------------------------
+ls 
+
+3. To list all table of any particular datasets in BigQuery Shell
+-------------------------------------------
 ls datasetName
+
+4. To list Schema of table in Json File Format (Not in bq shell)
+-------------------------------------------
+bq show --schema datasetName.TableName
+
+ 
+5. To list Schema of table in shell
+-------------------------------------------
+bq show  datasetName.TableName
 
 4. To list Schema of table in Json File Format (Not in bq shell)
 -------------------------------------------

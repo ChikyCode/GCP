@@ -1,0 +1,10 @@
+Sample:
+----------------------------------------------
+gsutil cp -r dir gs://my-bucket
+
+
+Actual Backup:
+----------------------------------------------
+gsutil cp -r /home/shabi_victor gs://cluster_shabi_m_backup
+
+
